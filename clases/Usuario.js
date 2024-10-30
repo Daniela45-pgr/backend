@@ -1,17 +1,18 @@
-class Usuario{
-  constructor(data){
-      this.id=data;
-      this.nombre=data.nombre;
-      this.usuario=data.usuario;
-      this.password=data.password;
-      this.salt=data.salt;
-      this.tipoUsuario=data.tipoUsuario;
-  }
+class Usuario {
+    constructor(data) {
+        this._id = data.id; // Solo asigna el id directamente
+        this.nombre = data.nombre;
+        this.usuario = data.usuario;
+        this.password = data.password;
+        this.salt = data.salt;
+        this.tipoUsuario = data.tipoUsuario;
+    }
 
-  set id(id){
-      this._id=id;
-  }
 
+    set id(id) {
+        this._id = id;
+    }
+ 
   set nombre(nombre){
       const nombreRegex=/^[A-ZÁÉÍÓÚÑ'][a-záéíóúñ']{1,}([ ][A-ZÁÉÍÓÚÑ'][a-záéíóúñ']{1,}){0,}$/;
       if (nombreRegex.test(nombre)){
@@ -41,8 +42,8 @@ class Usuario{
       this._tipoUsuario=tipoUsuario;
   }
 
-  get id(){
-      return this._id;
+  get id() {
+    return this._id;
   }
   
   get nombre(){
@@ -60,7 +61,7 @@ class Usuario{
   get datos(){
       if (this.id!=undefined) {
           return {
-              id:this.id,
+              id:this._id,
               nombre:this.nombre,
               usuario:this.usuario,
               password:this.password,

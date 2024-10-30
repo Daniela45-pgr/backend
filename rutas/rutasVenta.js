@@ -1,14 +1,15 @@
+
 var rutas = require("express").Router();
-var { nuevaVenta, mostrarVentas, buscarVentaPorID, cancelarVenta } = require("../bd/ventaBD");
+var { nuevaVenta, mostrarVentas, buscarVentaPorID, cancelarVenta, editarVenta } = require("../bd/ventaBD");
 
 rutas.post("/nuevaVenta", async (req, res) => {
-        const resultado = await nuevaVenta(req.body);
-        res.json(resultado);
+    const resultado = await nuevaVenta(req.body);
+    res.json(resultado);
 });
 
-rutas.get("/mostrarVentas", async (req, res) => {
+rutas.get("/mostrarVenta", async (req, res) => {
     const ventas = await mostrarVentas();
-    res.json(ventas);
+    res.json(ventas); 
 });
 
 rutas.get("/buscarVentaPorID/:id", async (req, res) => {
@@ -22,6 +23,11 @@ rutas.get("/buscarVentaPorID/:id", async (req, res) => {
 
 rutas.put("/cancelarVenta/:id", async (req, res) => {
     const resultado = await cancelarVenta(req.params.id);
+    res.json(resultado);
+});
+
+rutas.put("/editarVenta/:id", async (req, res) => {
+    const resultado = await editarVenta(req.params.id, req.body);
     res.json(resultado);
 });
 

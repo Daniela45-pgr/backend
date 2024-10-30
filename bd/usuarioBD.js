@@ -14,8 +14,7 @@ function validar(usuario) {
 async function mostrarUsuarios() {
     const usuarios = await usuariosBD.get();
     usuariosValidos = [];
-    usuarios.forEach(usuario => {
-        // console.log(usuario.id);  //.id para mostrar el id y el data() sirve para mostrar los demas datos     
+    usuarios.forEach(usuario => {    
         const usuario1 = new Usuario({ id: usuario.id, ...usuario.data() });
 
         if (validar(usuario1.datos)) {
@@ -28,15 +27,11 @@ async function mostrarUsuarios() {
 }
 
 async function buscarPorId(id) {
-    var usuariosValido;
     const usuario = await usuariosBD.doc(id).get();
     const usuario1 = new Usuario({ id: usuario.id, ...usuario.data() });
-    if (validar(usuario1.datos)) {
-        usuariosValido = usuario1.datos;
-    }
-    //console.log(usuario.data());
-    return usuariosValido;
+    return usuario1.datos;
 }
+
 
 
 async function nuevoUsuario(data) {
@@ -66,27 +61,34 @@ async function borrarUsuario(id) {
     }
     return usuarioBorrado;
 }
- borrarUsuario("DvnUP8zKXJKY1gwVDRgY");
-//mostrarUsuarios();
 
-//buscarPorId("100");
+async function editarUsuario(id, data) {
+    var usuarioEditado = false;
+    const usuarioExistente = await buscarPorId(id);
+    
+    if (usuarioExistente) {
+        const updateData = {};
+        
+        if (data.nombre) updateData.nombre = data.nombre;
+        if (data.usuario) updateData.usuario = data.usuario;
+        if (data.password) {
+            const { hash, salt } = encriptarPassword(data.password);
+            updateData.password = hash;
+            updateData.salt = salt;
+        }
 
-/*var data = {
-    nombre: "Pacho Villa",
-    usuario: "pancho",
-    password: "123"
-}*/
-
-var data = {
-    nombre: "Daniela",
-    usuario: "sfs",
-    password: "abc"
+        await usuariosBD.doc(id).update(updateData); 
+        usuarioEditado = true;
+    }
+    
+    return usuarioEditado;
 }
-nuevoUsuario(data);
+
 
 module.exports = {
     mostrarUsuarios,
     nuevoUsuario,
     borrarUsuario,
-    buscarPorId
-}
+    buscarPorId,
+    editarUsuario
+};
